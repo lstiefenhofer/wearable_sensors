@@ -30,5 +30,8 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<Stream<Map<String, double>>> getGyroscope(){
+    throw UnimplementedError('getGyroscope() has not been implemented');
+  }
   
 }

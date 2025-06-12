@@ -5,4 +5,8 @@ class WearableSensors {
   Future<String?> getPlatformVersion() {
     return WearableSensorsPlatform.instance.getPlatformVersion();
   }
+
+  Future<Stream<Map<String, double>>?> getGyroscope() {
+    return WearableSensorsPlatform.instance.getGyroscope();
+  }
 }

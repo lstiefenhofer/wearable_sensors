@@ -27,7 +27,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
+    initGyroStream();
   }
+
+  Stream<Map<String, double>> _gyroStream = Stream.empty();
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
@@ -48,6 +51,28 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion;
+    });
+  }
+
+    // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initGyroStream() async {
+    Stream<Map<String, double>> gyroStream;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    // We also handle the message potentially returning null.
+    try {
+      gyroStream =
+          await _wearableSensorsPlugin.getGyroscope() ?? Stream.empty();
+    } on PlatformException {
+      gyroStream = Stream.empty();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _gyroStream = gyroStream;
     });
   }
 
@@ -83,6 +108,27 @@ class _MyAppState extends State<MyApp> {
                   } else {
                     // Fallback for any other state.
                     return const Text('Waiting for numbers...');
+                  }
+                },
+              ),
+              StreamBuilder<Map<String, double>>(
+                stream: _gyroStream,
+                builder: (BuildContext context, AsyncSnapshot<Map<String, double>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while waiting for the first value.
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    // Display an error message if the stream fails.
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    // When data is available, display it in a Text widget.
+                    return Text(
+                      'Stream: ${snapshot.data}',
+                      //style: Theme.of(context).textTheme.headlineMedium,
+                    );
+                  } else {
+                    // Fallback for any other state.
+                    return const Text('Waiting for stream...');
                   }
                 },
               ),
