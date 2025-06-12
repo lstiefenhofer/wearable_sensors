@@ -1,6 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'wearable_sensors_method_channel.dart';
+import 'wearable_sensors_event_channel.dart';
 
 abstract class WearableSensorsPlatform extends PlatformInterface {
   /// Constructs a WearableSensorsPlatform.
@@ -8,7 +9,9 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static WearableSensorsPlatform _instance = MethodChannelWearableSensors();
+  //static WearableSensorsPlatform _instance = MethodChannelWearableSensors();
+  static WearableSensorsPlatform _instance = EventChannelWearableSensors();
+
 
   /// The default instance of [WearableSensorsPlatform] to use.
   ///
@@ -26,4 +29,6 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  
 }

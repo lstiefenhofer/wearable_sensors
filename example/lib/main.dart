@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
             children: [
-              Text('Hello world: $_platformVersion\n'),
+              Text('Hello: $_platformVersion\n'),
               // 2. Use a StreamBuilder to listen to the stream and display the number.
               StreamBuilder<int>(
                 stream: numberGenerator,
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
                     // When data is available, display it in a Text widget.
                     return Text(
                       'Counting: ${snapshot.data}',
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      //style: Theme.of(context).textTheme.headlineMedium,
                     );
                   } else {
                     // Fallback for any other state.
