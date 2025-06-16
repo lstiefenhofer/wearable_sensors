@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
             children: [
-              Text('Hello: $_platformVersion\n'),
+              Text('Hello: $_platformVersion'),
               // 2. Use a StreamBuilder to listen to the stream and display the number.
               StreamBuilder<int>(
                 stream: numberGenerator,
@@ -122,8 +122,11 @@ class _MyAppState extends State<MyApp> {
                     return Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                     // When data is available, display it in a Text widget.
+                    var x = snapshot.data?["x"]?.toStringAsFixed(9);
+                    var y = snapshot.data?["y"]?.toStringAsFixed(9);
+                    var z = snapshot.data?["z"]?.toStringAsFixed(9);
                     return Text(
-                      'Stream: ${snapshot.data}',
+                      'Gyro: \n x: $x \n y: $y \n z: $z',
                       //style: Theme.of(context).textTheme.headlineMedium,
                     );
                   } else {
