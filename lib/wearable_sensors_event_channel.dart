@@ -20,7 +20,7 @@ class EventChannelWearableSensors extends WearableSensorsPlatform {
   Future<Stream<Map<String, double>>> getSensorStream(MySensorType mySensorType) async {
     //final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     var gyroscopeStream = eventChannel
-            .receiveBroadcastStream(mySensorType)
+            .receiveBroadcastStream(mySensorType.name)
             .map((dynamic event) => Map<String, double>.from(event));
 
   //   Stream<Map<String, double>> get accelerometerEvents {

@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
             children: [
-              Text('Ily: $_platformVersion'),
+              Text('henlo: $_platformVersion'),
               // 2. Use a StreamBuilder to listen to the stream and display the number.
               StreamBuilder<int>(
                 stream: numberGenerator,
