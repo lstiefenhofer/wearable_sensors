@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:wearable_sensors/wearable_sensors.dart';
 
 import 'wearable_sensors_platform_interface.dart';
 
@@ -16,10 +17,10 @@ class EventChannelWearableSensors extends WearableSensorsPlatform {
   }
 
   @override
-  Future<Stream<Map<String, double>>> getGyroscope() async {
+  Future<Stream<Map<String, double>>> getSensorStream(MySensorType mySensorType) async {
     //final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     var gyroscopeStream = eventChannel
-            .receiveBroadcastStream()
+            .receiveBroadcastStream(mySensorType)
             .map((dynamic event) => Map<String, double>.from(event));
 
   //   Stream<Map<String, double>> get accelerometerEvents {

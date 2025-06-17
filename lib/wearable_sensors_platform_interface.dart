@@ -1,4 +1,5 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:wearable_sensors/wearable_sensors.dart';
 
 import 'wearable_sensors_method_channel.dart';
 import 'wearable_sensors_event_channel.dart';
@@ -30,8 +31,8 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<Stream<Map<String, double>>> getGyroscope(){
-    throw UnimplementedError('getGyroscope() has not been implemented');
+  Future<Stream<Map<String, double>>> getSensorStream(MySensorType mySensorType){
+    throw UnimplementedError('getSensorStream(MySensorType mySensorType) has not been implemented');
   }
   
 }

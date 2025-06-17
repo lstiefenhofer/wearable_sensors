@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     try {
       gyroStream =
-          await _wearableSensorsPlugin.getGyroscope() ?? Stream.empty();
+          await _wearableSensorsPlugin.getSensorStream(MySensorType.gyroscope) ?? Stream.empty();
     } on PlatformException {
       gyroStream = Stream.empty();
     }
@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
             children: [
-              Text('Hello: $_platformVersion'),
+              Text('Ily: $_platformVersion'),
               // 2. Use a StreamBuilder to listen to the stream and display the number.
               StreamBuilder<int>(
                 stream: numberGenerator,
