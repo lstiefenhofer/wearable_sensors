@@ -11,4 +11,8 @@ class WearableSensors {
   Future<Stream<Map<String, double>>?> getSensorStream(MySensorType mySensorType) {
     return WearableSensorsPlatform.instance.getSensorStream(mySensorType);
   }
+
+  Stream<Map<String, double>> createSensorStream(String channelName) {
+    return WearableSensorsPlatform.instance.createSensorStream(channelName);
+  }
 }

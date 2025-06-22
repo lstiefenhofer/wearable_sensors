@@ -22,14 +22,12 @@ class EventChannelWearableSensors extends WearableSensorsPlatform {
     var gyroscopeStream = eventChannel
             .receiveBroadcastStream(mySensorType.name)
             .map((dynamic event) => Map<String, double>.from(event));
-
-  //   Stream<Map<String, double>> get accelerometerEvents {
-  //   _accelerometerStream ??= _accelerometerChannel
-  //       .receiveBroadcastStream()
-  //       .map((dynamic event) => Map<String, double>.from(event));
-  //   return _accelerometerStream!;
-  // }
-
     return gyroscopeStream;
+  }
+
+    Stream<Map<String, double>> createSensorStream(String channelName) {
+    return EventChannel('wearable_sensors/$channelName')
+        .receiveBroadcastStream()
+        .map((dynamic event) => Map<String, double>.from(event));
   }
 }
