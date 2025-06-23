@@ -21,6 +21,8 @@ class _MyAppState extends State<MyApp> {
 
   Stream<Map<String, double>> _gyroStream = Stream.empty();
   Stream<Map<String, double>> _acceStream = Stream.empty();
+  Stream<Map<String, double>> _galvStream = Stream.empty();
+
 
   @override
   void initState() {
@@ -33,12 +35,14 @@ class _MyAppState extends State<MyApp> {
   void initStreams() async {
     final gyroStream = await _wearableSensorsPlugin.createSensorStream("gyroscope");
     final acceStream = await _wearableSensorsPlugin.createSensorStream("accelerometer");
+    final galvStream = await _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
 
     if (! mounted) return;
 
     setState(() {
       _gyroStream = gyroStream;
       _acceStream = acceStream;
+      _galvStream = galvStream;
     });
   }
 
@@ -63,29 +67,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-    // Platform messages are asynchronous, so we initialize in an async method.
-  // Future<void> initStream(String requestedName, Stream flutterStream) async {
-  //   Stream<Map<String, double>> sensorStream;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   // We also handle the message potentially returning null.
-  //   try {
-  //     sensorStream =
-  //         _wearableSensorsPlugin.createSensorStream(requestedName);
-  //   } on PlatformException {
-  //     sensorStream = Stream.empty();
-  //   }
-
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     flutterStream = sensorStream;
-  //   });
-  // }
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -96,9 +77,10 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ListView(
             children: [
-              Text('hi: $_platformVersion'),
+              Center(child: Text('hi: $_platformVersion')),
               Center(child: SensorStreamBuilder(stream: _gyroStream, streamTitle: "gyroscope",)),
               Center(child: SensorStreamBuilder(stream: _acceStream, streamTitle: "accelerometer",)),
+              Center(child: SensorStreamBuilder(stream: _galvStream, streamTitle: "galv skin response",)),
             ],
           ),
         ),

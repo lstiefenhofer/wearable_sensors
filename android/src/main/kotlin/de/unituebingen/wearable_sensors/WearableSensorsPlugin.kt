@@ -12,6 +12,8 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 
 class WearableSensorsPlugin : FlutterPlugin {
+
+    
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
         val messenger = flutterPluginBinding.binaryMessenger
@@ -19,15 +21,14 @@ class WearableSensorsPlugin : FlutterPlugin {
 
         // --- Register all Event Channels ---
 
-        // Helper function to reduce registration boilerplate
         fun registerSensorChannel(channelName: String, handler: EventChannel.StreamHandler) {
             EventChannel(messenger, "wearable_sensors/$channelName").setStreamHandler(handler)
         }
 
         registerSensorChannel("accelerometer", AccelerometerStreamHandler(sensorManager))
         registerSensorChannel("gyroscope", GyroscopeStreamHandler(sensorManager))
-        registerSensorChannel("magnetometer", MagnetometerStreamHandler(sensorManager))
-        // ... repeat for all 20 sensors ...
+        registerSensorChannel("galvanicSkinResponse", GalvanicSkinResponseStreamHandler(sensorManager))
+        // ... repeat for all other sensors ...
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -80,6 +81,7 @@ abstract class BaseSensorStreamHandler(
 
 // THE TINY CONCRETE CLASSES
 class AccelerometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_ACCELEROMETER)
-class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_GYROSCOPE)
-class MagnetometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_MAGNETIC_FIELD)
-// ... and so on for all 20 sensors ...
+class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 4)
+class GalvanicSkinResponseStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 65554)
+
+// ... and so on for all other sensors ...
