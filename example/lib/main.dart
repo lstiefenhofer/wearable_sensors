@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+// <<< CHANGED: Import permission_handler instead of health
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wearable_sensors/wearable_sensors.dart';
 
 void main() {
@@ -16,28 +18,50 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   final _wearableSensorsPlugin = WearableSensors();
+  // <<< REMOVED: The health factory instance is no longer needed.
 
   Stream<Map<String, double>> _gyroStream = Stream.empty();
   Stream<Map<String, double>> _acceStream = Stream.empty();
   Stream<Map<String, double>> _galvStream = Stream.empty();
 
-
   @override
   void initState() {
     super.initState();
     initPlatformState();
-    initStreams();
+    // Call the updated permission handling method
+    requestPermissionsAndInitStreams();
   }
 
+  // <<< CHANGED: This method now uses permission_handler
+  Future<void> requestPermissionsAndInitStreams() async {
+    // Request the specific permissions.
+    // Permission.sensors maps to BODY_SENSORS.
+    // Permission.activityRecognition is for motion sensors like accelerometer.
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.sensors,
+      Permission.activityRecognition,
+    ].request();
+
+    // Check if both permissions are granted.
+    if (statuses[Permission.sensors] == PermissionStatus.granted &&
+        statuses[Permission.activityRecognition] == PermissionStatus.granted) {
+      // If permissions were granted, initialize the sensor streams.
+      print("All necessary permissions granted. Initializing streams...");
+      initStreams();
+    } else {
+      // If permissions were denied, handle it here.
+      print("Permissions not granted. Streams will not be initialized.");
+      // You could show a dialog to the user explaining why the permissions are needed.
+    }
+  }
 
   void initStreams() async {
     final gyroStream = await _wearableSensorsPlugin.createSensorStream("gyroscope");
     final acceStream = await _wearableSensorsPlugin.createSensorStream("accelerometer");
     final galvStream = await _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
 
-    if (! mounted) return;
+    if (!mounted) return;
 
     setState(() {
       _gyroStream = gyroStream;
@@ -48,7 +72,6 @@ class _MyAppState extends State<MyApp> {
 
   String _platformVersion = 'Unknown';
 
-  
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
@@ -78,9 +101,15 @@ class _MyAppState extends State<MyApp> {
           child: ListView(
             children: [
               Center(child: Text('hi: $_platformVersion')),
-              Center(child: SensorStreamBuilder(stream: _gyroStream, streamTitle: "gyroscope",)),
-              Center(child: SensorStreamBuilder(stream: _acceStream, streamTitle: "accelerometer",)),
-              Center(child: SensorStreamBuilder(stream: _galvStream, streamTitle: "galv skin response",)),
+              Center(
+                  child: SensorStreamBuilder(
+                      stream: _gyroStream, streamTitle: "gyroscope")),
+              Center(
+                  child: SensorStreamBuilder(
+                      stream: _acceStream, streamTitle: "accelerometer")),
+              Center(
+                  child: SensorStreamBuilder(
+                      stream: _galvStream, streamTitle: "galv skin response")),
             ],
           ),
         ),
@@ -90,21 +119,22 @@ class _MyAppState extends State<MyApp> {
 }
 
 class SensorStreamBuilder extends StatelessWidget {
-  const SensorStreamBuilder({
-    super.key,
-    required Stream<Map<String, double>> stream,
-    required String streamTitle
-  }) : _myStream = stream, _streamTitle = streamTitle; 
+  const SensorStreamBuilder(
+      {super.key,
+      required Stream<Map<String, double>> stream,
+      required String streamTitle})
+      : _myStream = stream,
+        _streamTitle = streamTitle;
 
   final Stream<Map<String, double>> _myStream;
   final String _streamTitle;
-
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Map<String, double>>(
       stream: _myStream,
-      builder: (BuildContext context, AsyncSnapshot<Map<String, double>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<String, double>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the first value.
           return const CircularProgressIndicator();
