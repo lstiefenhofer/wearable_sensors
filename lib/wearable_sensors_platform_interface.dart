@@ -35,7 +35,7 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
     throw UnimplementedError('getSensorStream(MySensorType mySensorType) has not been implemented');
   }
 
-  Stream<Map<String, double>> createSensorStream(String channelName){
+  Stream<List<double>> createSensorStream(String channelName){
     throw UnimplementedError('_createSensorStream(String channelName) has not been implemented');
   }
   

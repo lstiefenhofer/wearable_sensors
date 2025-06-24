@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-// <<< CHANGED: Import permission_handler instead of health
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wearable_sensors/wearable_sensors.dart';
 
@@ -19,20 +18,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _wearableSensorsPlugin = WearableSensors();
-  // <<< REMOVED: The health factory instance is no longer needed.
 
-  Stream<Map<String, double>> _gyroStream = Stream.empty();
-  Stream<Map<String, double>> _acceStream = Stream.empty();
-  Stream<Map<String, double>> _galvStream = Stream.empty();
+  Stream<List<double>> _gyroStream = Stream.empty();
+  Stream<List<double>> _acceStream = Stream.empty();
+  Stream<List<double>> _galvStream = Stream.empty();
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-    // Call the updated permission handling method
     requestPermissionsAndInitStreams();
   }
-
   // <<< CHANGED: This method now uses permission_handler
   Future<void> requestPermissionsAndInitStreams() async {
     // Request the specific permissions.
@@ -121,20 +117,20 @@ class _MyAppState extends State<MyApp> {
 class SensorStreamBuilder extends StatelessWidget {
   const SensorStreamBuilder(
       {super.key,
-      required Stream<Map<String, double>> stream,
+      required Stream<List<double>> stream,
       required String streamTitle})
       : _myStream = stream,
         _streamTitle = streamTitle;
 
-  final Stream<Map<String, double>> _myStream;
+  final Stream<List<double>> _myStream;
   final String _streamTitle;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, double>>(
+    return StreamBuilder<List<double>>(
       stream: _myStream,
       builder: (BuildContext context,
-          AsyncSnapshot<Map<String, double>> snapshot) {
+          AsyncSnapshot<List<double>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the first value.
           return const CircularProgressIndicator();
@@ -142,14 +138,31 @@ class SensorStreamBuilder extends StatelessWidget {
           // Display an error message if the stream fails.
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          // When data is available, display it in a Text widget.
-          var x = snapshot.data?["x"]?.toStringAsFixed(9);
-          var y = snapshot.data?["y"]?.toStringAsFixed(9);
-          var z = snapshot.data?["z"]?.toStringAsFixed(9);
-          return Text(
-            '$_streamTitle: \n  x: $x \n  y: $y \n  z: $z',
-            //style: Theme.of(context).textTheme.headlineMedium,
-          );
+  // snapshot.data is now a List<double>
+  final values = snapshot.data!;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start, // Aligns text to the left
+    children: [
+      Text(
+        '$_streamTitle:',
+        // style: Theme.of(context).textTheme.headlineSmall, // Style for the title
+      ),
+      // Use the spread operator '...' to add each Text widget from the list
+      ...values.asMap().entries.map((entry) {
+        final index = entry.key;
+        final value = entry.value.toStringAsFixed(5);
+        return Padding( // Add some padding for better layout
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(
+            '[$index]: $value',
+            // style: Theme.of(context).textTheme.bodyMedium, // Style for each value
+          ),
+        );
+      }),
+    ],
+  );
+
         } else {
           // Fallback for any other state.
           return const Text('Waiting for stream...');

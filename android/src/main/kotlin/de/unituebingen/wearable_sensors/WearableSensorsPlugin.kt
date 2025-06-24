@@ -66,12 +66,7 @@ abstract class BaseSensorStreamHandler(
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == sensorType) {
-            // Note: This needs to be adapted for sensors that don't return 3 values.
-            val sensorValues = mapOf(
-                "x" to event.values.getOrElse(0) { 0.0f }.toDouble(),
-                "y" to event.values.getOrElse(1) { 0.0f }.toDouble(),
-                "z" to event.values.getOrElse(2) { 0.0f }.toDouble()
-            )
+            val sensorValues = event.values.map { it.toDouble() }.toDoubleArray()
             eventSink?.success(sensorValues)
         }
     }

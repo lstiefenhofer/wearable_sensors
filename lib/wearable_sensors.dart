@@ -12,7 +12,7 @@ class WearableSensors {
     return WearableSensorsPlatform.instance.getSensorStream(mySensorType);
   }
 
-  Stream<Map<String, double>> createSensorStream(String channelName) {
+  Stream<List<double>> createSensorStream(String channelName) {
     return WearableSensorsPlatform.instance.createSensorStream(channelName);
   }
 }
