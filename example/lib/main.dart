@@ -26,14 +26,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
     requestPermissionsAndInitStreams();
   }
-  // <<< CHANGED: This method now uses permission_handler
+
   Future<void> requestPermissionsAndInitStreams() async {
-    // Request the specific permissions.
-    // Permission.sensors maps to BODY_SENSORS.
-    // Permission.activityRecognition is for motion sensors like accelerometer.
+
+    // Body sensors will not work until permissions have been requested
     Map<Permission, PermissionStatus> statuses = await [
       Permission.sensors,
       Permission.activityRecognition,
@@ -42,13 +40,11 @@ class _MyAppState extends State<MyApp> {
     // Check if both permissions are granted.
     if (statuses[Permission.sensors] == PermissionStatus.granted &&
         statuses[Permission.activityRecognition] == PermissionStatus.granted) {
-      // If permissions were granted, initialize the sensor streams.
-      print("All necessary permissions granted. Initializing streams...");
+      // Permissions were granted
       initStreams();
     } else {
-      // If permissions were denied, handle it here.
-      print("Permissions not granted. Streams will not be initialized.");
-      // You could show a dialog to the user explaining why the permissions are needed.
+      // Permissions were denied 
+      // Give out error message
     }
   }
 
@@ -66,26 +62,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  String _platformVersion = 'Unknown';
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-
-    try {
-      platformVersion =
-          await _wearableSensorsPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -96,7 +72,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ListView(
             children: [
-              Center(child: Text('hi: $_platformVersion')),
+              Center(child: Text('hello world')),
               Center(
                   child: SensorStreamBuilder(
                       stream: _gyroStream, streamTitle: "gyroscope")),
@@ -138,31 +114,23 @@ class SensorStreamBuilder extends StatelessWidget {
           // Display an error message if the stream fails.
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-  // snapshot.data is now a List<double>
   final values = snapshot.data!;
 
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.start, // Aligns text to the left
+    crossAxisAlignment: CrossAxisAlignment.start, 
     children: [
-      Text(
-        '$_streamTitle:',
-        // style: Theme.of(context).textTheme.headlineSmall, // Style for the title
-      ),
+      Text('$_streamTitle:',),
       // Use the spread operator '...' to add each Text widget from the list
       ...values.asMap().entries.map((entry) {
         final index = entry.key;
         final value = entry.value.toStringAsFixed(5);
-        return Padding( // Add some padding for better layout
+        return Padding( 
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            '[$index]: $value',
-            // style: Theme.of(context).textTheme.bodyMedium, // Style for each value
-          ),
+          child: Text('[$index]: $value',),
         );
       }),
     ],
   );
-
         } else {
           // Fallback for any other state.
           return const Text('Waiting for stream...');

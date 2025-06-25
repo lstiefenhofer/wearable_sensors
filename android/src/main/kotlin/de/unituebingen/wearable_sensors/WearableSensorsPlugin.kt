@@ -1,4 +1,3 @@
-// android/src/main/kotlin/de/unituebingen/wearable_sensors/WearableSensorsPlugin.kt
 
 package de.unituebingen.wearable_sensors
 
@@ -12,23 +11,23 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 
 class WearableSensorsPlugin : FlutterPlugin {
-
     
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
         val messenger = flutterPluginBinding.binaryMessenger
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        // --- Register all Event Channels ---
-
+        //helper function to register all channels for all the sensors
+        //each channel has a dedicated handler class derived from a base handler
         fun registerSensorChannel(channelName: String, handler: EventChannel.StreamHandler) {
             EventChannel(messenger, "wearable_sensors/$channelName").setStreamHandler(handler)
         }
 
+        //we create a seperate event channel for each sensor
+        //name must match the name passed in plugin.createSensorStream()
         registerSensorChannel("accelerometer", AccelerometerStreamHandler(sensorManager))
         registerSensorChannel("gyroscope", GyroscopeStreamHandler(sensorManager))
         registerSensorChannel("galvanicSkinResponse", GalvanicSkinResponseStreamHandler(sensorManager))
-        // ... repeat for all other sensors ...
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -37,46 +36,9 @@ class WearableSensorsPlugin : FlutterPlugin {
     }
 }
 
-// --- Base and Concrete Stream Handlers ---
-// (Can be in the same file or separated for organization)
-
-// THE GENERIC BASE CLASS
-abstract class BaseSensorStreamHandler(
-    private val sensorManager: SensorManager,
-    private val sensorType: Int
-) : EventChannel.StreamHandler, SensorEventListener {
-    // ... (This is the full BaseSensorStreamHandler code from the previous answer)
-    // It contains the onListen, onCancel, onSensorChanged, and onAccuracyChanged methods.
-    private var eventSink: EventChannel.EventSink? = null
-    private val sensor: Sensor? = sensorManager.getDefaultSensor(sensorType)
-
-    override fun onListen(arguments: Any?, sink: EventChannel.EventSink?) {
-        if (sensor == null) {
-            sink?.error("UNAVAILABLE", "Sensor not available on this device", null)
-            return
-        }
-        this.eventSink = sink
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    override fun onCancel(arguments: Any?) {
-        sensorManager.unregisterListener(this)
-        this.eventSink = null
-    }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == sensorType) {
-            val sensorValues = event.values.map { it.toDouble() }.toDoubleArray()
-            eventSink?.success(sensorValues)
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-}
-
-// THE TINY CONCRETE CLASSES
+// concrete classes to handle each sensor stream
+// only difference is the sensor type passed to each of them
 class AccelerometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_ACCELEROMETER)
 class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 4)
 class GalvanicSkinResponseStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 65554)
 
-// ... and so on for all other sensors ...
