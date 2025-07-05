@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   Stream<List<double>> _gyroStream = Stream.empty();
   Stream<List<double>> _acceStream = Stream.empty();
   Stream<List<double>> _galvStream = Stream.empty();
+  Stream<List<double>> _heartStream = Stream.empty();
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
     final gyroStream = await _wearableSensorsPlugin.createSensorStream("gyroscope");
     final acceStream = await _wearableSensorsPlugin.createSensorStream("accelerometer");
     final galvStream = await _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
+    final heartStream = await _wearableSensorsPlugin.createSensorStream("heartRate");
 
     if (!mounted) return;
 
@@ -59,6 +61,7 @@ class _MyAppState extends State<MyApp> {
       _gyroStream = gyroStream;
       _acceStream = acceStream;
       _galvStream = galvStream;
+      _heartStream = heartStream;
     });
   }
 
@@ -72,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ListView(
             children: [
-              Center(child: Text('hello world')),
+              Center(child: Text('hello')),
               Center(
                   child: SensorStreamBuilder(
                       stream: _gyroStream, streamTitle: "gyroscope")),
@@ -82,6 +85,9 @@ class _MyAppState extends State<MyApp> {
               Center(
                   child: SensorStreamBuilder(
                       stream: _galvStream, streamTitle: "galv skin response")),
+              Center(
+                  child: SensorStreamBuilder(
+                      stream: _heartStream, streamTitle: "heart rate")),
             ],
           ),
         ),
