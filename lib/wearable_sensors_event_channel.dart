@@ -14,4 +14,8 @@ class EventChannelWearableSensors extends WearableSensorsPlatform {
         .receiveBroadcastStream()
         .map((dynamic event) => List<double>.from(event));
   }
+
+  EventChannel getSensorEventChannel(String channelName) {
+    return EventChannel('wearable_sensors/$channelName');
+  }
 }

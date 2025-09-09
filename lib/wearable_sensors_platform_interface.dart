@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:wearable_sensors/wearable_sensors.dart';
 
@@ -30,5 +31,8 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
   Stream<List<double>> createSensorStream(String channelName){
     throw UnimplementedError('createSensorStream(String channelName) has not been implemented');
   }
-  
+
+  EventChannel getSensorEventChannel(String channelName) {
+    throw UnimplementedError();
+  }
 }
