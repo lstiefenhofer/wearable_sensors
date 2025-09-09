@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   Stream<List<double>> _acceStream = Stream.empty();
   Stream<List<double>> _galvStream = Stream.empty();
   Stream<List<double>> _heartStream = Stream.empty();
+  Stream<List<double>> _magnetStream = Stream.empty();
 
   @override
   void initState() {
@@ -54,6 +55,8 @@ class _MyAppState extends State<MyApp> {
     final acceStream = await _wearableSensorsPlugin.createSensorStream("accelerometer");
     final galvStream = await _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
     final heartStream = await _wearableSensorsPlugin.createSensorStream("heartRate");
+    final magnetStream = await _wearableSensorsPlugin.createSensorStream("magnetometer");
+
 
     if (!mounted) return;
 
@@ -62,6 +65,7 @@ class _MyAppState extends State<MyApp> {
       _acceStream = acceStream;
       _galvStream = galvStream;
       _heartStream = heartStream;
+      _magnetStream = magnetStream;
     });
   }
 
@@ -88,6 +92,9 @@ class _MyAppState extends State<MyApp> {
               Center(
                   child: SensorStreamBuilder(
                       stream: _heartStream, streamTitle: "heart rate")),
+              Center(
+                  child: SensorStreamBuilder(
+                      stream: _magnetStream, streamTitle: "magnetometer")),                      
             ],
           ),
         ),

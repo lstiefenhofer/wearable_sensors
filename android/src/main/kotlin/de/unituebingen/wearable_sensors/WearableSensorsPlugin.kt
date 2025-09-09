@@ -29,6 +29,7 @@ class WearableSensorsPlugin : FlutterPlugin {
         registerSensorChannel("gyroscope", GyroscopeStreamHandler(sensorManager))
         registerSensorChannel("galvanicSkinResponse", GalvanicSkinResponseStreamHandler(sensorManager))
         registerSensorChannel("heartRate", HeartRateStreamHandler(sensorManager))
+        registerSensorChannel("magnetometer", MagnetometerStreamHandler(sensorManager))
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -43,5 +44,6 @@ class AccelerometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm
 class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 4)
 class GalvanicSkinResponseStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 65554)
 class HeartRateStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_HEART_RATE)
+class MagnetometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_MAGNETIC_FIELD)
 
 
