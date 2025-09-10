@@ -21,10 +21,10 @@ abstract class BaseSensorStreamHandler(
             return
         }
         this.eventSink = sink
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST)
     }
 
-    override fun onCancel(arguments: Any?) {
+    override fun onCancel(arguments: Any?) { 
         sensorManager.unregisterListener(this)
         this.eventSink = null
     }
