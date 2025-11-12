@@ -1,7 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.unituebingen.wearable_sensors">
 
-    <uses-permission android:name="android.permission.BODY_SENSORS"/>
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+
+    <!-- Legacy Permissions-->
+    <uses-permission android:name="android.permission.BODY_SENSORS" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" android:maxSdkVersion="35"/>
+
+
+    <!-- New Permissions -->
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
+    
+     
 </manifest>

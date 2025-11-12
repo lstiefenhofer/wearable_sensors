@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wearable_sensors/wearable_sensors.dart';
 
@@ -28,26 +27,24 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    requestPermissionsAndInitStreams();
+    initStreams();
+    //requestPermissionsAndInitStreams();
   }
 
-  Future<void> requestPermissionsAndInitStreams() async {
+  Future<void> requestPermissions() async {
 
-    // Body sensors will not work until permissions have been requested
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.sensors,
-      Permission.activityRecognition,
-    ].request();
+    await Permission.sensors.request();
+    print(await Permission.sensors.status);
 
-    // Check if both permissions are granted.
-    if (statuses[Permission.sensors] == PermissionStatus.granted &&
-        statuses[Permission.activityRecognition] == PermissionStatus.granted) {
-      // Permissions were granted
-      initStreams();
-    } else {
-      // Permissions were denied 
-      // Give out error message
-    }
+    await Future.delayed(Duration(seconds: 2));
+
+    await Permission.sensorsAlways.request();
+    print(await Permission.sensorsAlways.status);
+
+    await Future.delayed(Duration(seconds: 2));
+
+    await Permission.activityRecognition.request();
+    print(await Permission.activityRecognition.status);
   }
 
   void initStreams() async {
@@ -79,7 +76,8 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ListView(
             children: [
-              Center(child: Text('hello')),
+              //TextButton(onPressed: requestPermissions, child: Text('Get Permissions')),
+              Center(child: Text('You might have to manually allow permissions in watch settings')),
               Center(
                   child: SensorStreamBuilder(
                       stream: _gyroStream, streamTitle: "gyroscope")),
