@@ -30,4 +30,8 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
       'createSensorStream(String channelName) has not been implemented',
     );
   }
+
+  Future<List<Map<String, String>>> getAllSensors() {
+    throw UnimplementedError('getAllSensors() has not been implemented');
+  }
 }

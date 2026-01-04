@@ -10,10 +10,8 @@ class MethodChannelWearableSensors extends WearableSensorsPlatform {
   final methodChannel = const MethodChannel('wearable_sensors');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>(
-      'getPlatformVersion',
-    );
-    return version;
+  Future<List<Map<String, String>>> getAllSensors() async {
+    final sensorMap = await methodChannel.invokeMethod('getAllSensors');
+    return sensorMap;
   }
 }
