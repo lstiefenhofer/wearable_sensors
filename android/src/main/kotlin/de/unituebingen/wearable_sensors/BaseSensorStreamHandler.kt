@@ -6,10 +6,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import io.flutter.plugin.common.EventChannel
 
-// generic stream handler will be used to create stream handler for specific sensor type 
+// generic stream handler will be used to create stream handler for specific sensor type
 abstract class BaseSensorStreamHandler(
-    private val sensorManager: SensorManager,
-    private val sensorType: Int
+        private val sensorManager: SensorManager,
+        private val sensorType: Int,
 ) : EventChannel.StreamHandler, SensorEventListener {
 
     private var eventSink: EventChannel.EventSink? = null
@@ -22,14 +22,16 @@ abstract class BaseSensorStreamHandler(
         }
         this.eventSink = sink
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-        //sensorManager.registerListener(this, sensor, 20000)
+        // sensorManager.registerListener(this, sensor, 20000)
     }
 
-    override fun onCancel(arguments: Any?) { 
+    override fun onCancel(arguments: Any?) {
         sensorManager.unregisterListener(this)
         this.eventSink = null
     }
 
+    // new sensor event is detected and sent to event sink
+    // mapped to double by default
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == sensorType) {
             val sensorValues = event.values.map { it.toDouble() }.toDoubleArray()
