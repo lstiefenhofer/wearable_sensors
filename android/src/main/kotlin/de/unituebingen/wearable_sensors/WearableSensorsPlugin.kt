@@ -75,19 +75,23 @@ class WearableSensorsPlugin : FlutterPlugin {
         }
 
         override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}
+
 }
 
 // concrete classes to handle each sensor stream
 // only difference is the sensor type passed to each of them
-class AccelerometerStreamHandler(sm: SensorManager) :
-        BaseSensorStreamHandler(sm, Sensor.TYPE_ACCELEROMETER)
+class AccelerometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_ACCELEROMETER)
 
+//int 4 corresponds to Sensor.TYPE_GYROSCOPE
+//we can use them interchangably, which is why calling the eda sensor by its number works
+//class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_GYROSCOPE)
 class GyroscopeStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 4)
 
+// int 65554 is the id of the gsr sensor on the target device Google Pixel Watch 3
 class GalvanicSkinResponseStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, 65554)
+
+class MagnetometerStreamHandler(sm: SensorManager) : BaseSensorStreamHandler(sm, Sensor.TYPE_MAGNETIC_FIELD)
 
 class HeartRateStreamHandler(sm: SensorManager) :
         BaseSensorStreamHandler(sm, Sensor.TYPE_HEART_RATE)
 
-class MagnetometerStreamHandler(sm: SensorManager) :
-        BaseSensorStreamHandler(sm, Sensor.TYPE_MAGNETIC_FIELD)

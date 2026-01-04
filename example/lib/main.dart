@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:wearable_sensors/wearable_sensors.dart';
 
 void main() {
@@ -28,34 +26,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    requestPermissionsAndInitStreams();
+    initStreams();
   }
 
-  Future<void> requestPermissionsAndInitStreams() async {
-
-    // Body sensors will not work until permissions have been requested
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.sensors,
-      Permission.activityRecognition,
-    ].request();
-
-    // Check if both permissions are granted.
-    if (statuses[Permission.sensors] == PermissionStatus.granted &&
-        statuses[Permission.activityRecognition] == PermissionStatus.granted) {
-      // Permissions were granted
-      initStreams();
-    } else {
-      // Permissions were denied 
-      // Give out error message
-    }
-  }
 
   void initStreams() async {
-    final gyroStream = await _wearableSensorsPlugin.createSensorStream("gyroscope");
-    final acceStream = await _wearableSensorsPlugin.createSensorStream("accelerometer");
-    final galvStream = await _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
-    final heartStream = await _wearableSensorsPlugin.createSensorStream("heartRate");
-    final magnetStream = await _wearableSensorsPlugin.createSensorStream("magnetometer");
+    final gyroStream =  _wearableSensorsPlugin.createSensorStream("gyroscope");
+    final acceStream =  _wearableSensorsPlugin.createSensorStream("accelerometer");
+    final galvStream =  _wearableSensorsPlugin.createSensorStream("galvanicSkinResponse");
+    final heartStream =  _wearableSensorsPlugin.createSensorStream("heartRate");
+    final magnetStream =  _wearableSensorsPlugin.createSensorStream("magnetometer");
 
 
     if (!mounted) return;
@@ -73,28 +53,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
         body: Center(
           child: ListView(
             children: [
-              Center(child: Text('hello')),
-              Center(
-                  child: SensorStreamBuilder(
-                      stream: _gyroStream, streamTitle: "gyroscope")),
-              Center(
-                  child: SensorStreamBuilder(
-                      stream: _acceStream, streamTitle: "accelerometer")),
-              Center(
-                  child: SensorStreamBuilder(
-                      stream: _galvStream, streamTitle: "galv skin response")),
-              Center(
-                  child: SensorStreamBuilder(
-                      stream: _heartStream, streamTitle: "heart rate")),
-              Center(
-                  child: SensorStreamBuilder(
-                      stream: _magnetStream, streamTitle: "magnetometer")),                      
+              SizedBox(height: 30,),
+              Center(child: Text('SENSORS:')),
+              SensorStreamBuilder(
+                  stream: _gyroStream, streamTitle: "gyroscope"),
+              SensorStreamBuilder(
+                  stream: _acceStream, streamTitle: "accelerometer"),
+              SensorStreamBuilder(
+                  stream: _galvStream, streamTitle: "galv skin response"),
+              SensorStreamBuilder(
+                  stream: _heartStream, streamTitle: "heart rate"),
+              SensorStreamBuilder(
+                  stream: _magnetStream, streamTitle: "magnetometer"),      
+              SizedBox(height: 30,),           
             ],
           ),
         ),
@@ -116,39 +90,41 @@ class SensorStreamBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<double>>(
-      stream: _myStream,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<double>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for the first value.
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Display an error message if the stream fails.
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {
-  final values = snapshot.data!;
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start, 
-    children: [
-      Text('$_streamTitle:',),
-      // Use the spread operator '...' to add each Text widget from the list
-      ...values.asMap().entries.map((entry) {
-        final index = entry.key;
-        final value = entry.value.toStringAsFixed(5);
-        return Padding( 
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text('[$index]: $value',),
+    return Center(
+      child: StreamBuilder<List<double>>(
+        stream: _myStream,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<double>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show a loading indicator while waiting for the first value.
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            // Display an error message if the stream fails.
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+        final values = snapshot.data!;
+      
+        return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, 
+      children: [
+        Text('$_streamTitle:',),
+        // Use the spread operator '...' to add each Text widget from the list
+        ...values.asMap().entries.map((entry) {
+          final index = entry.key;
+          final value = entry.value.toStringAsFixed(5);
+          return Padding( 
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text('[$index]: $value',),
+          );
+        }),
+      ],
         );
-      }),
-    ],
-  );
-        } else {
-          // Fallback for any other state.
-          return const Text('Waiting for stream...');
-        }
-      },
+          } else {
+            // Fallback for any other state.
+            return const Text('Waiting for stream...');
+          }
+        },
+      ),
     );
   }
 }

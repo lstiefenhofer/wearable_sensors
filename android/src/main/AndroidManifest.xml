@@ -1,7 +1,72 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.unituebingen.wearable_sensors">
 
-    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="36" android:compileSdkVersionCodename="Baklava" android:installLocation="auto" android:requiredSplitTypes="base__abi,base__density" android:splitTypes="" package="de.unituebingen.wearable_sensors" platformBuildVersionCode="36" platformBuildVersionName="Baklava">
+
+    <!--
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.unituebingen.wearable_sensors">
+    -->
+
+    <!-- Legacy Permissions-->
+
+    <!--
+    <uses-permission android:name="android.permission.BODY_SENSORS" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" android:maxSdkVersion="35"/>
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" android:maxSdkVersion="35"/>
+    -->
+
+    <!-- New Permissions -->
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
+
+    <!-- BLIND copy from fitbit app -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.OVERRIDE_SYSTEM_KEY_BEHAVIOR_IN_FOCUSED_WINDOW"/>
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
+    <uses-feature android:name="com.fitbit.wear.software.app" android:required="true"/>
+    <uses-feature android:name="android.hardware.type.watch"/>
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
+    <uses-permission android:name="com.google.android.clockwork.settings.WATCH_TOUCH"/>
+    <uses-permission android:name="com.google.android.clockwork.settings.END_WET_MODE"/>
+    <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
+    <uses-permission android:name="com.google.wear.permission.RECEIVE_WEATHER"/>
+    <uses-permission android:name="com.google.android.wearable.healthservices.permisson.OEM_OPAQUE_DATA_ACCESS"/>
+    <uses-permission android:name="com.google.android.wearable.healthservices.permission.OEM_OPAQUE_DATA_ACCESS"/>
+    <uses-permission android:name="com.google.android.wearable.healthservices.permission.OEM_SPO2_NIGHTTIME_DATA_ACCESS"/>
+    <uses-permission android:name="com.google.android.wearable.healthservices.permission.WRITE_PROFILE_INFO"/>
+    <uses-permission android:name="com.google.android.wearable.healthservices.permission.SET_OPAQUE_CONFIGURATION"/>
+    <uses-permission android:name="com.google.android.wearable.permission.BIND_TILE_PROVIDER"/>
+    <uses-permission android:name="com.google.android.wearable.permission.USE_IMMEDIATE_COMPLICATION_UPDATE"/>
+    <uses-permission android:name="com.google.android.wearable.permission.USE_SYNCHRONOUS_COMPLICATION_UPDATE"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="com.google.android.wearable.pixel.pdms.permission.NOTIFY_ABTM_RECOMMENDATION_CHANGE"/>
+    <uses-permission android:name="com.google.android.wearable.pixel.pdms.permission.ACCESS_MODES_STATE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.wear.permission.READ_TOUCH_LOCK"/>
+    <uses-permission android:name="com.google.wear.permission.WRITE_TOUCH_LOCK"/>
+    <uses-permission android:name="com.google.wear.permission.READ_BATTERY_SAVER"/>
+
+    
+     
 </manifest>
