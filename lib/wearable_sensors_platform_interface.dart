@@ -1,6 +1,4 @@
-import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:wearable_sensors/wearable_sensors.dart';
 
 import 'wearable_sensors_method_channel.dart';
 import 'wearable_sensors_event_channel.dart';
@@ -13,7 +11,6 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
 
   //static WearableSensorsPlatform _instance = MethodChannelWearableSensors();
   static WearableSensorsPlatform _instance = EventChannelWearableSensors();
-
 
   /// The default instance of [WearableSensorsPlatform] to use.
   ///
@@ -28,11 +25,9 @@ abstract class WearableSensorsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Stream<List<double>> createSensorStream(String channelName){
-    throw UnimplementedError('createSensorStream(String channelName) has not been implemented');
-  }
-
-  EventChannel getSensorEventChannel(String channelName) {
-    throw UnimplementedError();
+  Stream<List<double>> createSensorStream(String channelName) {
+    throw UnimplementedError(
+      'createSensorStream(String channelName) has not been implemented',
+    );
   }
 }
